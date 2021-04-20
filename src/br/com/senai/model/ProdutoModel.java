@@ -45,12 +45,7 @@ public ProdutoModel(String nomeDoProduto, double precoDoProduto, int quantidadeD
 public ProdutoModel() {
 		
 	}
-@Override
-public String toString() {
-	return "Nome: " + nomeDoProduto + "\n Preço:R$ " + precoDoProduto
-			+ "\n Quantidade: " + quantidadeDoProduto + "\n Saldo em estoque: R$" + saldoEmEstoque;
-}
-	
+
 	
 	
 }

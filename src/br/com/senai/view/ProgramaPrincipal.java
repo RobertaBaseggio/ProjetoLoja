@@ -27,9 +27,11 @@ public class ProgramaPrincipal {
 				break;
 				
 			case 2:
-				produtoController.ConsultarProdutos(produtos);
+				produtoController.listarProdutos(produtos);
 				break;
-
+			case 3:
+				produtoController.editarProduto(produtos);
+				break;
 			case 9:
 				sair = true;
 				break;
