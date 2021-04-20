@@ -50,6 +50,7 @@ public class ProdutoController {
 
 	public void ConsultarProdutos(List<ProdutoModel> produtos) {
 		System.out.println("--- PRODUTOS CADASTRADOS ---");
+		System.out.printf("| %10s | %8s | %4s | %9s|\n",  "Produto" + " Preço "+ " Quantidade "  + "R$ Total" );
 		for (ProdutoModel ProdutoModel : produtos) {
 			System.out.println(ProdutoModel.toString());
 		}
