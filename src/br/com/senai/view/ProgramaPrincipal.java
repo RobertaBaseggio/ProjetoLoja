@@ -3,6 +3,7 @@ package br.com.senai.view;
 import java.util.ArrayList;
 import java.util.List;
 import br.com.senai.model.ProdutoModel;
+import br.com.senai.model.carrinho;
 import br.com.senai.model.controller.ProdutoController;
 
 public class ProgramaPrincipal {
@@ -11,6 +12,7 @@ public class ProgramaPrincipal {
 		// TODO Auto-generated method stub
 
 		List<ProdutoModel> produtos = new ArrayList<ProdutoModel>();
+		List<carrinho> ListaCarrinho = new ArrayList<carrinho>();
 
 		ProdutoController produtoController = new ProdutoController();
 
@@ -31,6 +33,9 @@ public class ProgramaPrincipal {
 				break;
 			case 3:
 				produtoController.editarProduto(produtos);
+				break;
+			case 4:
+				produtoController.removerProduto(produtos);
 				break;
 			case 9:
 				sair = true;
