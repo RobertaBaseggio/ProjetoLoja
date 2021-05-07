@@ -2,9 +2,15 @@ package br.com.senai.view;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import br.com.senai.model.ProdutoModel;
-import br.com.senai.model.carrinho;
-import br.com.senai.model.controller.ProdutoController;
+import br.com.senai.pessoa.AdicionaPessoa;
+import br.com.senai.controller.ProdutoController;
+import br.com.senai.controller.produto.CadastraProduto;
+import br.com.senai.controller.produto.DeletaProduto;
+import br.com.senai.controller.produto.EditaProduto;
+import br.com.senai.controller.produto.ListaProduto;
+import br.com.senai.model.Carrinho;
 
 public class ProgramaPrincipal {
 
@@ -12,32 +18,47 @@ public class ProgramaPrincipal {
 		// TODO Auto-generated method stub
 
 		List<ProdutoModel> produtos = new ArrayList<ProdutoModel>();
-		List<carrinho> ListaCarrinho = new ArrayList<carrinho>();
+		List<Carrinho> listaCarrinho = new ArrayList<Carrinho>();
 
 		ProdutoController produtoController = new ProdutoController();
+		CadastraProduto cadastraProduto = new CadastraProduto();
+		ListaProduto listaItensProduto = new ListaProduto();
+		EditaProduto editaProduto = new EditaProduto();
+		DeletaProduto deletaProduto = new DeletaProduto();
+		AdicionaPessoa adicionaPessoa = new AdicionaPessoa();
 
 		boolean sair = false;
-
+		
+		String cliente = adicionaPessoa.definirCliente();
+		
+		
 		do {
+			
 			produtoController.menu();
 			int opcao = produtoController.opcao();
 
 			switch (opcao) {
 			case 1:
-				produtos.add(produtoController.cadastrarProduto());
+				produtos.add(cadastraProduto.cadastrarProduto());
 				
 				break;
 				
 			case 2:
-				produtoController.listarProdutos(produtos);
+				for(ProdutoModel prod : produtos) {
+					System.out.println("---" + prod.getQuantidadeDoProduto());
+				}
+				listaItensProduto.listarProdutos(produtos);
 				break;
 			case 3:
-				produtoController.editarProduto(produtos);
+				editaProduto.editarProduto(produtos);
 				break;
 			case 4:
-				produtoController.removerProduto(produtos);
+				deletaProduto.removerProduto(produtos);
 				break;
-			case 9:
+			case 5: 
+				produtoController.verCarrinho(listaCarrinho, produtos, cliente);
+				break;
+			case 6:
 				sair = true;
 				break;
 			default:
