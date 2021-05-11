@@ -19,7 +19,7 @@ public void removerProduto(List<ProdutoModel> produtos) {
 			return;
 		}
 
-		listaItensProduto.listarProdutos(produtos);
+		listaItensProduto.listarProdutos();
 
 		System.out.println("--- REMOVER ---");
 		System.out.print("Insira o Id do Produto: ");

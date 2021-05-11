@@ -44,10 +44,9 @@ public class ProgramaPrincipal {
 				break;
 				
 			case 2:
-				for(ProdutoModel prod : produtos) {
-					System.out.println("---" + prod.getQuantidadeDoProduto());
-				}
-				listaItensProduto.listarProdutos(produtos);
+				
+				listaItensProduto.listarProdutos();
+				
 				break;
 			case 3:
 				editaProduto.editarProduto(produtos);

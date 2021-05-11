@@ -17,7 +17,7 @@ public class EditaProduto {
 			ProdutoModel produto = new ProdutoModel();
 			int idDoProduto, indexDoCampo;
 
-			listaItensProduto.listarProdutos(produtos);
+			listaItensProduto.listarProdutos();
 
 			System.out.println("---EDITAR---");
 			System.out.print("Insira o ID do produto: ");
