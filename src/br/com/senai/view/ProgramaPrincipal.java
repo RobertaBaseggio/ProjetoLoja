@@ -49,7 +49,7 @@ public class ProgramaPrincipal {
 				
 				break;
 			case 3:
-				editaProduto.editarProduto(produtos);
+				editaProduto.editarProduto();
 				break;
 			case 4:
 				deletaProduto.removerProduto(produtos);
