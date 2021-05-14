@@ -1,32 +1,63 @@
 package br.com.senai.controller.produto;
 
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import java.util.Scanner;
 
+import br.com.dao.DataBaseConnection;
 import br.com.senai.model.ProdutoModel;
 
 public class EditaProduto {
 
-	Scanner scanner = new Scanner(System.in);
+	private Scanner scanner = new Scanner(System.in);
+	private ListaProduto listaProduto;
+	private ProdutoModel produto;
+	private Connection connection;
 	
-	public ProdutoModel editarProduto(List<ProdutoModel> produtos) {
+	public EditaProduto() {
+		connection = DataBaseConnection.getInstance().getConnection();
 		
-		ListaProduto listaItensProduto = new ListaProduto();
-
-		if (produtos.size() > 0) {
-			ProdutoModel produto = new ProdutoModel();
+	}
+	
+	public ProdutoModel editarProduto() {
+		PreparedStatement preparedStatement;
+		
+		listaProduto  = new ListaProduto();
+		
+			produto = new ProdutoModel();
 			int idDoProduto, indexDoCampo;
-
-			listaItensProduto.listarProdutos();
-
+			
+			if (listaProduto.listarProdutos() == null) {
+				return null;
+			} 
+			
 			System.out.println("---EDITAR---");
 			System.out.print("Insira o ID do produto: ");
-			idDoProduto = scanner.nextInt() - 1;
+			idDoProduto = scanner.nextInt();
+			
+			try {
+				String sql = "Select * from produto where codigo = ?";
+				preparedStatement = connection.prepareStatement(sql);
+				preparedStatement.setInt(1, idDoProduto);
+				
+				ResultSet resultSet = preparedStatement.executeQuery();
+				
+				if(!resultSet.next()) {
+					System.out.println("Este produto não existe");
+					 return null;
+				} else {
+					produto.setNomeDoProduto(resultSet.getString("nomeDoProduto"));
+					produto.setPrecoDoProduto(resultSet.getDouble("precoDoProduto"));
+					produto.setQuantidadeDoProduto(resultSet.getInt("quantidadeEmEstoque"));
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
 
-			if (idDoProduto > produtos.size()) {
-				System.out.println("Este produto não existe");
-
-			} else {
 
 				System.out.println("---CAMPOS---");
 				System.out.println("1) Nome do produto;");
@@ -38,61 +69,100 @@ public class EditaProduto {
 				switch (indexDoCampo) {
 				case 1:
 	
-					editarNomeDoProduto(produtos, produto, idDoProduto);
+					editarNomeDoProduto(idDoProduto);
 					break;
 				case 2:
-					editarPrecoDoProduto(produtos, produto, idDoProduto);
+					editarPrecoDoProduto( idDoProduto);
 					break;
 
 				case 3:
-					editarQuantidadeDoProduto(produtos, produto, idDoProduto);
+					editarQuantidadeDoProduto(idDoProduto);
 
 				default:
 					System.out.println("Opção invalida!!!");
 					break;
 
 				}
-			}
-		} else {
-			System.out.println("Estoque vazio");
-		}
+	
+		
 		return null;
 
 	}
 
-	public ProdutoModel editarQuantidadeDoProduto(List<ProdutoModel> produtos, ProdutoModel produto, int idDoProduto) {
+	public ProdutoModel editarQuantidadeDoProduto( int idDoProduto) {
+		PreparedStatement preparedStatement;
+		
 		System.out.println("Informe a nova quantia do produto: ");
 		produto.setQuantidadeDoProduto(scanner.nextInt());
-
-		produto.setSaldoEmEstoque(
-				produtos.get(idDoProduto).getPrecoDoProduto() * produto.getQuantidadeDoProduto());
-		produtos.set(idDoProduto, produto);
+		produto.setSaldoEmEstoque(produto.getPrecoDoProduto() * produto.getQuantidadeDoProduto());
+		
+		try {
+			String sql = "update produto set quantidadeEmEstoque = ?, saldoEmEstoque = ? where codigo = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.setInt(1, produto.getQuantidadeDoProduto());
+			preparedStatement.setDouble(2, produto.getSaldoEmEstoque());
+			preparedStatement.setInt(3, idDoProduto);
+			
+			preparedStatement.execute();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return produto;
 	}
 	
 
-	public ProdutoModel editarPrecoDoProduto(List<ProdutoModel> produtos, ProdutoModel produto, int idDoProduto) {
+	public ProdutoModel editarPrecoDoProduto( int idDoProduto) {
+		PreparedStatement preparedStatement;
+		
 		System.out.println("Informe o novo preço do produto: ");
-		produto.setPrecoDoProduto(scanner.nextInt());
-
-		produto.setNomeDoProduto(produtos.get(idDoProduto).getNomeDoProduto());
-		produto.setSaldoEmEstoque(
-				produtos.get(idDoProduto).getQuantidadeDoProduto() * produto.getPrecoDoProduto());
-
-		produtos.set(idDoProduto, produto);
+		produto.setPrecoDoProduto(scanner.nextDouble());
+		
+		produto.setSaldoEmEstoque(produto.getPrecoDoProduto() * produto.getQuantidadeDoProduto());
+		
+		try {
+			
+			String sql = "update produto set precoDoProduto = ?, saldoEmEstoque = ? where codigo = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.setDouble(1, produto.getPrecoDoProduto());
+			preparedStatement.setDouble(2, produto.getSaldoEmEstoque());
+			preparedStatement.setInt(3, idDoProduto);
+			
+			preparedStatement.execute();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		
 		return produto;
 	}
 
-	public ProdutoModel editarNomeDoProduto(List<ProdutoModel> produtos, ProdutoModel produto, int idDoProduto) {
-		produto.setPrecoDoProduto(produtos.get(idDoProduto).getPrecoDoProduto());
-		produto.setQuantidadeDoProduto(produtos.get(idDoProduto).getQuantidadeDoProduto());
-		produto.setSaldoEmEstoque(produtos.get(idDoProduto).getSaldoEmEstoque());
+	public ProdutoModel editarNomeDoProduto(  int idDoProduto) {
+		PreparedStatement preparedStatement;
 		
 		System.out.println("Informe o novo nome do produto: ");
 		produto.setNomeDoProduto(scanner.next());
+		
+		try {
+			String sql = "update produto set nomeDoProduto = ? where codigo = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.setString(1, produto.getNomeDoProduto());
+			preparedStatement.setInt(2, idDoProduto);
+			
+			preparedStatement.execute();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
 
-		produtos.set(idDoProduto, produto);
 		return produto;
 	}
 }
