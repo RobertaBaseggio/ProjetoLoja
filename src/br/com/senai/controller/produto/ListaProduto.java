@@ -31,7 +31,7 @@ public class ListaProduto {
 			}
 			
 			System.out.println("--- PRODUTOS CADASTRADOS ---");
-			System.out.printf("| %2s | %15s | %7s | %4s | %9s|\n", "ID", "Produto", " Preço ", " Qtd ", "R$ Total");
+			System.out.printf("| %2s | %15s | %7s | %3s | %9s|\n", "ID", "Produto", " Preço ", " Qtd ", "R$ Total");
 			
 			
 			resultSet.previous();
