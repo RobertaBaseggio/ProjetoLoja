@@ -6,6 +6,7 @@ import java.util.List;
 import br.com.senai.model.ProdutoModel;
 import br.com.senai.pessoa.AdicionaPessoa;
 import br.com.senai.controller.ProdutoController;
+import br.com.senai.controller.carrinho.VisualizaCarrinho;
 import br.com.senai.controller.produto.CadastraProduto;
 import br.com.senai.controller.produto.DeletaProduto;
 import br.com.senai.controller.produto.EditaProduto;
@@ -26,6 +27,7 @@ public class ProgramaPrincipal {
 		EditaProduto editaProduto = new EditaProduto();
 		DeletaProduto deletaProduto = new DeletaProduto();
 		AdicionaPessoa adicionaPessoa = new AdicionaPessoa();
+		VisualizaCarrinho visualizaCarrinho = new VisualizaCarrinho();
 
 		boolean sair = false;
 		
@@ -52,10 +54,10 @@ public class ProgramaPrincipal {
 				editaProduto.editarProduto();
 				break;
 			case 4:
-				deletaProduto.removerProduto(produtos);
+				deletaProduto.removerProduto();
 				break;
 			case 5: 
-				produtoController.verCarrinho(listaCarrinho, produtos, cliente);
+				visualizaCarrinho.verCarrinho(listaCarrinho, produtos, cliente);
 				break;
 			case 6:
 				sair = true;

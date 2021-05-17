@@ -1,55 +1,88 @@
 package br.com.senai.controller.carrinho;
 
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Scanner;
 
-import br.com.senai.model.Carrinho;
+import br.com.dao.DataBaseConnection;
 import br.com.senai.model.ProdutoModel;
 
 public class AdicionaItemNoCarrinho {
-	
+
 	Scanner scanner = new Scanner(System.in);
 
-	
-	public void adicionarCarrinho(List<Carrinho> listaCarrinho, List<ProdutoModel> produtos) {
-		Carrinho carrinho = new Carrinho();
-		
-		
-		if(produtos.size() <= 0) {
-			System.out.println("Não há produtos cadastrados");
-		}
-		
-		System.out.println("--- ADICIONAR ---");
-		System.out.println("Qual o id do item?");
-		int idDoProduto = scanner.nextInt() - 1;
-		System.out.println("Qual a quatidade desejada?");
-		int quantidade = scanner.nextInt();
-		
-		if(Carrinho.getIdDoProduto() > produtos.size()) {
-			System.out.println("Esse produto não está cadastrado");
-		}
-		
-		carrinho.setIdDoProduto(idDoProduto);
-		carrinho.setNomeDoProduto(produtos.get(idDoProduto).getNomeDoProduto());
-		carrinho.setPrecoDoProduto(produtos.get(idDoProduto).getPrecoDoProduto());
-		carrinho.setQuantidadeDoProduto(quantidade);
-		carrinho.setSaldoEmEstoque(carrinho.getQuantidadeDoProduto() * carrinho.getQuantidadeDoProduto());
-		carrinho.setValorTotalPorItem(carrinho.getQuantidadeDoProduto() * carrinho.getQuantidadeDoProduto());
-		listaCarrinho.add(carrinho);
-		
-		atualizarQuantidadeEValorTotal(produtos, quantidade, idDoProduto);
-		
+	private Connection connection;
+
+	public AdicionaItemNoCarrinho() {
+		connection = DataBaseConnection.getInstance().getConnection();
 	}
 
-	public List<ProdutoModel> atualizarQuantidadeEValorTotal(List<ProdutoModel> produtos, int quantidade, int idDoProduto){
+	public void adicionarCarrinho() {
+
+		PreparedStatement preparedStatement;
 		ProdutoModel produto = new ProdutoModel();
-		
-		produto.setQuantidadeDoProduto(produtos.get(idDoProduto).getQuantidadeDoProduto() - quantidade);
-		produto.setSaldoEmEstoque(produtos.get(idDoProduto).getPrecoDoProduto() * produto.getQuantidadeDoProduto());
-		produto.setNomeDoProduto(produtos.get(idDoProduto).getNomeDoProduto());
-		produto.setPrecoDoProduto(produtos.get(idDoProduto).getPrecoDoProduto());
-		produtos.set(idDoProduto, produto);
-		
-		return produtos;
+		ResultSet resultSet;
+
+		System.out.println("--- ADICIONAR ---");
+		System.out.println("Qual o id do item?");
+		int idDoProduto = scanner.nextInt();
+		System.out.println("Qual a quatidade desejada?");
+		int quantidade = scanner.nextInt();
+
+		try {
+
+			String sql = "Select * from produto where codigo = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, idDoProduto);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (!resultSet.next()) {
+				System.out.println("Não possui dados cadastrados.");
+				return;
+
+			} else {
+				produto.setNomeDoProduto(resultSet.getString("nomeDoProduto"));
+				produto.setPrecoDoProduto(resultSet.getDouble("precoDoProduto"));
+				produto.setQuantidadeDoProduto(resultSet.getInt("quantidadeEmEstoque"));
+				produto.setSaldoEmEstoque(produto.getPrecoDoProduto() * quantidade);
+			}
+
+		} catch (Exception e) {
+			System.out.println("Erro ao adicionar ao carrinho.");
+		}
+
+		try {
+
+			String sql = "INSERT INTO itensnocarrinho(nomeDoProduto, precoDoProduto, quantidadeEmEstoque, saldoEmEstoque)  VALUES (?, ?, ?, ?)";
+			PreparedStatement prepareStatement = connection.prepareStatement(sql);
+
+			prepareStatement.setString(1, produto.getNomeDoProduto());
+			prepareStatement.setDouble(2, produto.getPrecoDoProduto());
+			prepareStatement.setInt(3, quantidade);
+			prepareStatement.setDouble(4, produto.getSaldoEmEstoque());
+
+			prepareStatement.execute();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+
+			String sql = "update produto set quantidadeEmEstoque = ?, saldoEmEstoque = ? where codigo = ?";
+			preparedStatement = connection.prepareStatement(sql);
+
+			preparedStatement.setDouble(1, produto.getQuantidadeDoProduto() - quantidade);
+			preparedStatement.setDouble(2, produto.getSaldoEmEstoque());
+			preparedStatement.setInt(3, idDoProduto);
+
+			preparedStatement.execute();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 }
