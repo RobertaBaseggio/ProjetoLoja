@@ -77,10 +77,8 @@ public class EditaProduto {
 
 				case 3:
 					editarQuantidadeDoProduto(idDoProduto);
-
-				default:
-					System.out.println("Opção invalida!!!");
 					break;
+			
 
 				}
 	
