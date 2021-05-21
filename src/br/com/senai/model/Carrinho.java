@@ -50,7 +50,7 @@ public class Carrinho {
 	}
 
 	public void setIdDoProduto(int idDoProduto) {
-		this.idDoProduto = idDoProduto;
+		Carrinho.idDoProduto = idDoProduto;
 	}
 
 	public ProdutoModel getLojaModel() {
@@ -72,7 +72,7 @@ public class Carrinho {
 
 	public Carrinho(int idDoProduto, ProdutoModel produtoModel, double valorTotalPorItem) {
 		super();
-		this.idDoProduto = idDoProduto;
+		Carrinho.idDoProduto = idDoProduto;
 		this.lojaModel = produtoModel;
 		this.valorTotalPorItem = valorTotalPorItem;
 	}

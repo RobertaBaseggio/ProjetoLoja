@@ -31,10 +31,10 @@ public class VisualizaCarrinho {
 			addCarrinho.adicionarCarrinho();
 			break;
 		case 2:
-			removeCarrinho.removerCarrinho(listaCarrinho, produtos, cliente);
+			removeCarrinho.removerCarrinho( cliente);
 			break;
 		case 3:
-			finalizaCompra.finalizarCompra(listaCarrinho, produtos, cliente);
+			finalizaCompra.finalizarCompra( cliente);
 			break;
 		case 4:
 			

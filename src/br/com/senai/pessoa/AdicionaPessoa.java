@@ -9,6 +9,7 @@ import br.com.dao.DataBaseConnection;
 public class AdicionaPessoa {
 	
 	private Connection connection;
+	Scanner scanner = new Scanner(System.in);
 	
 	public AdicionaPessoa() {
 		connection = DataBaseConnection.getInstance().getConnection();
@@ -17,7 +18,7 @@ public class AdicionaPessoa {
 
 	public String definirCliente() {		
 	
-	Scanner scanner = new Scanner(System.in);
+	
 	
 	PreparedStatement preparedStatement;
 	
