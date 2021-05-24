@@ -1,16 +1,13 @@
 package br.com.senai.controller.carrinho;
 
-import java.util.List;
 import java.util.Scanner;
 
-import br.com.senai.model.Carrinho;
-import br.com.senai.model.ProdutoModel;
 
 public class VisualizaCarrinho {
 
 	Scanner scanner = new Scanner(System.in);
 	
-	public void verCarrinho(List<Carrinho> listaCarrinho, List<ProdutoModel> produtos,String cliente) {
+	public void verCarrinho(String cliente) {
 
 		ListaCarrinho listaCarrinhoItens = new ListaCarrinho();
 		AdicionaItemNoCarrinho addCarrinho = new AdicionaItemNoCarrinho();

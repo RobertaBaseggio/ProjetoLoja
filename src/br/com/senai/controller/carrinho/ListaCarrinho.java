@@ -35,7 +35,7 @@ public class ListaCarrinho {
 			resultSet.previous();
 
 			while(resultSet.next()) {
-				System.out.printf("| %2s | %15s | %15s | %7s | %4s | %9s |\n",
+				System.out.printf("| %2s | %15s | %15s | %7s | %5s | %9s |\n",
 						resultSet.getInt("codigo"),
 						resultSet.getInt("codigoProduto"),
 						resultSet.getString("nomeDoProduto"),

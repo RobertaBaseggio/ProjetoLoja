@@ -8,13 +8,13 @@ import java.sql.ResultSet;
 
 import br.com.dao.DataBaseConnection;
 import br.com.senai.model.Carrinho;
-
-
+import br.com.senai.pessoa.AdicionaPessoa;
 public class FinalizaCompra {
 
 	Scanner scanner = new Scanner(System.in);
 
 	VisualizaCarrinho visualizaCarrinho = new VisualizaCarrinho();
+	AdicionaPessoa adicionaPessoa = new AdicionaPessoa();
 
 	private Connection connection;
 
@@ -62,14 +62,16 @@ public class FinalizaCompra {
 		try {
 
 			if (confirmacao == 1) {
-
-				String sql = "INSERT INTO comprasEfetuadas (nomeDoProduto, precoDoProduto, quantidadeEmEstoque, saldoEmEstoque) VALUES (?, ?, ?, ?)";
+				//mudar o nome na database para nome cliente e tipo string
+				String sql = "INSERT INTO comprasEfetuadas (nomeDoProduto, precoDoProduto, quantidadeEmEstoque, saldoEmEstoque, nomeCliente) "
+						+ "VALUES (?, ?, ?, ?, ?)";
 				PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
 				preparedStatement.setString(1, carrinho.getNomeDoProduto());
 				preparedStatement.setDouble(2, carrinho.getPrecoDoProduto());
 				preparedStatement.setInt(3, carrinho.getQuantidadeDoProduto());
 				preparedStatement.setDouble(4, carrinho.getSaldoEmEstoque());
+				preparedStatement.setString(5, cliente);
 				preparedStatement.execute();
 
 				listaCarrinho.gerarCupom(cliente);
@@ -77,8 +79,6 @@ public class FinalizaCompra {
 				String sql2 = "truncate table itensNoCarrinho";
 				preparedStatement = connection.prepareStatement(sql2);
 				preparedStatement.execute();
-
-				
 
 			}
 

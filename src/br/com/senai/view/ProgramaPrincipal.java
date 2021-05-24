@@ -11,7 +11,6 @@ import br.com.senai.controller.produto.CadastraProduto;
 import br.com.senai.controller.produto.DeletaProduto;
 import br.com.senai.controller.produto.EditaProduto;
 import br.com.senai.controller.produto.ListaProduto;
-import br.com.senai.model.Carrinho;
 
 public class ProgramaPrincipal {
 
@@ -19,8 +18,7 @@ public class ProgramaPrincipal {
 		// TODO Auto-generated method stub
 
 		List<ProdutoModel> produtos = new ArrayList<ProdutoModel>();
-		List<Carrinho> listaCarrinho = new ArrayList<Carrinho>();
-
+		
 		ProdutoController produtoController = new ProdutoController();
 		CadastraProduto cadastraProduto = new CadastraProduto();
 		ListaProduto listaItensProduto = new ListaProduto();
@@ -57,7 +55,7 @@ public class ProgramaPrincipal {
 				deletaProduto.removerProduto();
 				break;
 			case 5: 
-				visualizaCarrinho.verCarrinho(listaCarrinho, produtos, cliente);
+				visualizaCarrinho.verCarrinho(cliente);
 				break;
 			case 6:
 				sair = true;

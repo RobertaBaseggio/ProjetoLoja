@@ -106,25 +106,37 @@ public class RemoveCarrinho {
 				carrinho.setPrecoDoProduto(resultSet.getDouble("precoDoProduto"));
 				carrinho.setQuantidadeDoProduto(resultSet.getInt("quantidadeEmEstoque"));
 				carrinho.setSaldoEmEstoque(resultSet.getInt("saldoEmEstoque"));
-				quantidadeNoEstoque = resultSet.getInt("saldoEmEstoque");
+				quantidadeNoEstoque = resultSet.getInt("quatidadeEmEstoque");
+				
 			}
 			
+			if(quantidade == quantidadeNoEstoque) {
+				String sql2 = "delete from itensNoCarrinho where codigoProduto = ?";
+				preparedStatement = connection.prepareStatement(sql2);
+				preparedStatement.setInt(1, idDoProduto);
+				preparedStatement.execute();
+			}else {
 
-			String sql2 = "update produto set quantidadeEmEstoque = ?, saldoEmEstoque = ? where codigo = ?";
-			preparedStatement = connection.prepareStatement(sql2);
+				String sql3 = "update itensNoCarrinho set quantidadeEmEstoque = ?, saldoEmEstoque = ? where codigoProduto = ?";
+				preparedStatement = connection.prepareStatement(sql3);
+
+				preparedStatement.setDouble(1, carrinho.getQuantidadeDoProduto() - quantidade);
+				preparedStatement.setDouble(2, carrinho.getPrecoDoProduto() *  (carrinho.getQuantidadeDoProduto() - quantidade));
+				preparedStatement.setInt(3, idDoProduto);
+				preparedStatement.execute();
+			}
+
+			sql = "update produto set quantidadeEmEstoque = ?, saldoEmEstoque = ? where codigo = ?";
+			preparedStatement = connection.prepareStatement(sql);
 
 			preparedStatement.setDouble(1, produto.getQuantidadeDoProduto() + quantidade);
 			preparedStatement.setDouble(2, produto.getPrecoDoProduto() *  (produto.getQuantidadeDoProduto() + quantidade));
 			preparedStatement.setInt(3, idDoProduto);
 			preparedStatement.execute();
+			
 
 			
-			if(quantidade == quantidadeNoEstoque) {
-				String sql3 = "delete from itensNoCarrinho where codigoProduto = ?";
-				preparedStatement = connection.prepareStatement(sql3);
-				preparedStatement.setInt(1, idDoProduto);
-				preparedStatement.execute();
-			}
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
