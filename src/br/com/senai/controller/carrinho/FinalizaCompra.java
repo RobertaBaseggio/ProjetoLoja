@@ -62,16 +62,15 @@ public class FinalizaCompra {
 		try {
 
 			if (confirmacao == 1) {
-				//mudar o nome na database para nome cliente e tipo string
-				String sql = "INSERT INTO comprasEfetuadas (nomeDoProduto, precoDoProduto, quantidadeEmEstoque, saldoEmEstoque, nomeCliente) "
-						+ "VALUES (?, ?, ?, ?, ?)";
+		
+				String sql = "INSERT INTO comprasEfetuadas (nomeDoProduto, precoDoProduto, quantidadeEmEstoque, nomeCliente) "
+						+ "VALUES (?, ?, ?, ?)";
 				PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
 				preparedStatement.setString(1, carrinho.getNomeDoProduto());
 				preparedStatement.setDouble(2, carrinho.getPrecoDoProduto());
 				preparedStatement.setInt(3, carrinho.getQuantidadeDoProduto());
-				preparedStatement.setDouble(4, carrinho.getSaldoEmEstoque());
-				preparedStatement.setString(5, cliente);
+				preparedStatement.setString(4, cliente);
 				preparedStatement.execute();
 
 				listaCarrinho.gerarCupom(cliente);

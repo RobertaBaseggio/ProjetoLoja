@@ -20,7 +20,8 @@ public class VisualizaCarrinho {
 		System.out.println("1) Adicionar itens");
 		System.out.println("2) Remover itens");
 		System.out.println("3) Finalizar compra");
-		System.out.println("4) Sair do carrinho");
+		System.out.println("4) Listar Compras realizadas");
+		System.out.println("5) Sair do carrinho");
 		int opcaoCarrinho = scanner.nextInt();
 
 		switch (opcaoCarrinho) {
@@ -32,8 +33,11 @@ public class VisualizaCarrinho {
 			break;
 		case 3:
 			finalizaCompra.finalizarCompra( cliente);
-			break;
+			break;	
 		case 4:
+			listaCarrinhoItens.verComprados(cliente);
+			break;
+		case 5:
 			
 			break;
 			default:

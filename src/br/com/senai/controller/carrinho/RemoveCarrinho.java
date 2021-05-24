@@ -48,6 +48,7 @@ public class RemoveCarrinho {
 		}
 	}
 
+
 	public void removerCarrinho(String cliente) {
 		ProdutoModel produto = new ProdutoModel();
 
@@ -66,13 +67,31 @@ public class RemoveCarrinho {
 
 		System.out.print("Insira o codigo de Produto: ");
 		int idDoProduto = scanner.nextInt();
-		System.out.println("Qual a quantidade a ser removida?");
-		int quantidade = scanner.nextInt();
 
 		try {
 
 			
-			String sql = "Select * from produto where codigo = ?";
+			String sql = "Select * from itensNoCarrinho where codigo = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, idDoProduto);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			if (!resultSet.next()) {
+				System.out.println("Não possui dados cadastrados.");
+				return;
+
+			} else {
+				carrinho.setNomeDoProduto(resultSet.getString("nomeDoProduto"));
+				carrinho.setPrecoDoProduto(resultSet.getDouble("precoDoProduto"));
+				carrinho.setQuantidadeDoProduto(resultSet.getInt("quantidadeEmEstoque"));
+				carrinho.setSaldoEmEstoque(resultSet.getDouble("saldoEmEstoque"));
+				quantidadeNoEstoque = resultSet.getInt("quantidadeEmEstoque");
+				preparedStatement.execute();
+				
+			}
+			
+			 sql = "Select * from produto where codigo = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, idDoProduto);
 
@@ -86,56 +105,24 @@ public class RemoveCarrinho {
 				produto.setNomeDoProduto(resultSet.getString("nomeDoProduto"));
 				produto.setPrecoDoProduto(resultSet.getDouble("precoDoProduto"));
 				produto.setQuantidadeDoProduto(resultSet.getInt("quantidadeEmEstoque"));
-				produto.setSaldoEmEstoque(resultSet.getInt("saldoEmEstoque"));
-				
+				produto.setSaldoEmEstoque(resultSet.getDouble("saldoEmEstoque"));
 			}
 			
-
-			 sql = "Select * from itensNoCarrinho where codigo = ?";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, idDoProduto);
-
-			resultSet = preparedStatement.executeQuery();
-
-			if (!resultSet.next()) {
-				System.out.println("Não possui dados cadastrados.");
-				return;
-
-			} else {
-				carrinho.setNomeDoProduto(resultSet.getString("nomeDoProduto"));
-				carrinho.setPrecoDoProduto(resultSet.getDouble("precoDoProduto"));
-				carrinho.setQuantidadeDoProduto(resultSet.getInt("quantidadeEmEstoque"));
-				carrinho.setSaldoEmEstoque(resultSet.getInt("saldoEmEstoque"));
-				quantidadeNoEstoque = resultSet.getInt("quatidadeEmEstoque");
-				
-			}
-			
-			if(quantidade == quantidadeNoEstoque) {
 				String sql2 = "delete from itensNoCarrinho where codigoProduto = ?";
 				preparedStatement = connection.prepareStatement(sql2);
 				preparedStatement.setInt(1, idDoProduto);
 				preparedStatement.execute();
-			}else {
+		
 
-				String sql3 = "update itensNoCarrinho set quantidadeEmEstoque = ?, saldoEmEstoque = ? where codigoProduto = ?";
-				preparedStatement = connection.prepareStatement(sql3);
-
-				preparedStatement.setDouble(1, carrinho.getQuantidadeDoProduto() - quantidade);
-				preparedStatement.setDouble(2, carrinho.getPrecoDoProduto() *  (carrinho.getQuantidadeDoProduto() - quantidade));
+				sql = "update produto set quantidadeEmEstoque = ?, saldoEmEstoque = ? where codigo = ?";
+				preparedStatement = connection.prepareStatement(sql);
+		
+				preparedStatement.setDouble(1, produto.getQuantidadeDoProduto() + quantidadeNoEstoque);
+				preparedStatement.setDouble(2, produto.getPrecoDoProduto() *  (produto.getQuantidadeDoProduto() + quantidadeNoEstoque));
 				preparedStatement.setInt(3, idDoProduto);
 				preparedStatement.execute();
-			}
-
-			sql = "update produto set quantidadeEmEstoque = ?, saldoEmEstoque = ? where codigo = ?";
-			preparedStatement = connection.prepareStatement(sql);
-
-			preparedStatement.setDouble(1, produto.getQuantidadeDoProduto() + quantidade);
-			preparedStatement.setDouble(2, produto.getPrecoDoProduto() *  (produto.getQuantidadeDoProduto() + quantidade));
-			preparedStatement.setInt(3, idDoProduto);
-			preparedStatement.execute();
 			
-
-			
+				
 			
 			
 		} catch (Exception e) {

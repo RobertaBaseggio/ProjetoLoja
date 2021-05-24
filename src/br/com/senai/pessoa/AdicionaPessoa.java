@@ -26,23 +26,13 @@ public class AdicionaPessoa {
 		
 		try {
 			
-			 String sql = "Select nome from cliente where nomeCliente = ?";
+	
+			String sql ="insert into cliente values (null, ?)";
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setString(1, nome);
-				resultSet = preparedStatement.executeQuery();
-
-				String confirmaNome = resultSet.getString("nomeCliente");		
-				
-				if(nome != confirmaNome) {
-					 sql ="insert into cliente values (null, ?)";
-						preparedStatement = connection.prepareStatement(sql);
-						preparedStatement.setString(1, nome);
-						preparedStatement.execute();
-				}
-			
-			
-
+				preparedStatement.execute();
 		
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
